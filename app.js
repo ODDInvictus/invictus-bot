@@ -6,11 +6,9 @@ const client = new Discord.Client();
 
 client.on('message', msg => {
     if (msg.author.bot) return; // Sender is the bot
-
     if (msg.channel.id == settings.channelID) return; // Quote chnnel
 
     //Leuke grapjes
-
     if (msg.content.search(/\bwat\b/gi) > -1) {
         msg.reply('patat🍟');
         return;
@@ -39,7 +37,6 @@ client.on('message', msg => {
     }
 
     //Commands
-
     if (!msg.content.startsWith(settings.prefix)) return; // If not a command
 
     const args = msg.content.slice(settings.prefix.length).trim().split(/ +/);
@@ -52,7 +49,15 @@ client.on('message', msg => {
     if (!cmd) return;
 
     if (cmd.args && !args.length || args.length > cmd.args_length) {
-        return msg.reply(`ik mis een aantal argumenten. ${cmd.usage}`);
+		if (!cmd.hasOwnProperty('noArgsReply')) {return msg.reply(`ik mis een aantal argumenten. ${cmd.usage}`);
+		}
+
+		cmd.noArgsReply().then(reply => {
+			return msg.reply(reply);
+		}, err => {
+			return msg.reply(err);
+		});
+		return;
     }
 
     try {
