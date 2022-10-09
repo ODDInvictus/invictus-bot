@@ -1,6 +1,6 @@
 {
-  "name": "niebot-js",
-  "version": "1.0.0",
+  "name": "invictus-bot",
+  "version": "1.1.0",
   "description": "The best discord bot ever made in js",
   "main": "app.js",
   "scripts": {
@@ -8,16 +8,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Nierot/niebot-js.git"
+    "url": "git+https://github.com/astronautilus14/invictus-bot.git"
   },
-  "author": "Nierot",
+  "author": "Astronautilus14",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Nierot/niebot-js/issues"
+    "url": "https://github.com/astronautilus14/invictus-botissues"
   },
-  "homepage": "https://github.com/Nierot/niebot-js#readme",
+  "homepage": "https://github.com/astronautilus14/invictus-bot#readme",
   "dependencies": {
-    "@discordjs/opus": "^0.3.2",
+    "@discordjs/opus": "^0.8.0",
+    "axios": "^1.1.2",
     "discord.js": "^12.2.0",
     "ffmpeg-static": "^4.2.6",
     "simple-youtube-api": "^5.2.1",

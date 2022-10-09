@@ -9,32 +9,30 @@ client.on('message', msg => {
 
     if (msg.channel.id == settings.channelID) return; // Quote chnnel
 
-    console.log(msg);
-
     //Leuke grapjes
 
-    if (msg.content.toLowerCase().includes('wat')) {
+    if (msg.content.search(/\bwat\b/gi) > -1) {
         msg.reply('patat🍟');
         return;
     }
 
-    if (msg.content.toLowerCase().includes('hoezo')) {
+    if (msg.content.search(/\bhoezo\b/gi) > -1) {
         msg.reply('ouzo!🍾');
         return;
     }
 
-    if (msg.content.toLowerCase().includes('invictus')) {
+    if (msg.content.search(/\binvictus\b/gi) > -1) {
         msg.reply("'vo");
         return;
     }
 
-    if (msg.content.toLowerCase().includes('das mooi')) {
+    if (msg.content.search(/\bdas mooi\b/gi) > -1) {
         msg.react(msg.guild.emojis.cache.get(settings.dasmooiID))
             .catch((err) => console.log(err));
         return;
     }
 
-    if (msg.content.toLowerCase().includes('pollo')) {
+    if (msg.content.search(/\bpollo\b/gi) > -1) {
         msg.react(msg.guild.emojis.cache.get(settings.polloID))
             .catch((err) => console.log(err));
         return;
@@ -79,40 +77,42 @@ client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}`);
 });
 
+client.login(settings.token);
 
-// API
-const express = require('express');
-const cors = require('cors');
+// // API
+// const express = require('express');
+// const cors = require('cors');
 
-const app = express();
-app.use(cors());
+// const app = express();
+// app.use(cors());
 
-app.get('/quote', (req, res) => {
-    console.log('Request on route /quote');
+// app.get('/quote', (req, res) => {
+//     console.log('Request on route /quote');
 
-    const channel = client.channels.cache.get(settings.channelID);
+//     const channel = client.channels.cache.get(settings.channelID);
 
-    channel.messages.fetch({ limit: 100 }).then(messages => {
-        //Iterate through the messages here with the variable "messages".
-        ihavesend = false;
-        messages.forEach(message => {
-            if (ihavesend) return;
+//     channel.messages.fetch({ limit: 100 }).then(messages => {
+//         //Iterate through the messages here with the variable "messages".
+//         ihavesend = false;
+//         messages.forEach(message => {
+//             if (ihavesend) return;
 
-            if (Math.random() < 0.1) {
-                res.json({quote: message.content});
-                ihavesend = true;
-            } 
-        });
-        if (!ihavesend) {
-            res.json({quote: "wie dit leest trekt bak -Das tijdens het maken van de bot (kans op dit bericht is 1 / 10^100)"});
-        }
-      });
-});
+//             if (Math.random() < 0.1) {
+//                 res.json({quote: message.content});
+//                 ihavesend = true;
+//             } 
+//         });
+//         if (!ihavesend) {
+//             res.json({quote: "wie dit leest trekt bak -Das tijdens het maken van de bot (kans op dit bericht is 1 / 10^100)"});
+//         }
+//       });
+// });
 
-const run = async () => {
-    await client.login(settings.token);
-    app.listen(settings.PORT);
-    console.log('Listening on port ' + settings.PORT);
-}
+// const run = async () => {
+//     await client.login(settings.token);
+//     const port = process.env.PORT || settings.PORT;
+//     app.listen(port);
+//     console.log('Listening on port ' + port);
+// }
 
-run();
+// run();

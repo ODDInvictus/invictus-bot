@@ -17,7 +17,7 @@ module.exports = {
     args_length: 2,
     usage: usage,
     execute: async (msg, args, client) => {
-        if (!types.includes(args[0])) return msg.reply(usage)
+        if (!types.includes(args[0])) return msg.reply(usage);
         
         let first = undefined;
 
