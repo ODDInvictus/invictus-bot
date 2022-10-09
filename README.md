@@ -9,19 +9,34 @@ npm install
 ```
 2. Maak settings.json
   ```sh
-  type nul > settings.json
-  echo {"token": "", "youtubeApiToken": "", "prefix": "-", "channelID": "", "dasmooiID": "", "polloID": "", "PORT": 4200} > settings.json
+  echo  "{
+   \"token\": \"FILL_IN\",
+   \"youtubeApiToken\": \"FILL_IN\",
+   \"link\": \"FILL_IIN\",
+   \"prefix\": \"-\",
+   \"channelID\": \"FILL_IN\",
+   \"dasmooiID\": \"FILL_IN\",
+   \"polloID\": \"FILL_IN\",
+   \"PORT\": 4200,
+   \"strafbakken\": \"https://strafbakken.nautdevroome.nl/bakken\",
+   \"strafbakkenPass\": \"FILL_IN\"
+}" > settings.json
   ```
   Invullen:
    - Token: Discord api token
    - youtubeApiToken: YouTube api token
+   - link: Discord link
    - channelID: Quote channel ID
    - dasmooiID: Das Mooi! emote ID
    - polloID: Pollo👍 emote ID
+   - strafbakkenPass: Hash van het strafbakken wachtwoord
 3. Start
   ```sh
   node app.js
   ```
+  
+### Quotes
+Het quotes API gedeelte is er momenteel uitgecomment.
 
 ### Niebot-js
 
