@@ -7,7 +7,11 @@ module.exports = {
 	description: 'Update de strafbakken',
 	args: true,
 	args_length: 2,
-	usage: `${settings.prefix}strafbakken <naam> [+ | -]\n${settings.prefix}strafbakken\n{naam} is de naam van de persoon die strafbakken moet krijgen of verliezen\n{+ | -} is of de persoon strafbakken moet krijgen of verliezen`,
+	usage: [{cmd: `${settings.prefix}strafbakken <persoon> <plus of min>`,
+			desc: 'Update de strafbakken per persoon'},
+			{
+			cmd: `${settings.prefix}strafbakken`,
+			desc: 'Bekijk alle strafbakken'}],
 	noArgsReply: () => {
 		return new Promise((resolve, reject) => {
 			console.log("No args reply");
