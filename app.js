@@ -12,17 +12,32 @@ client.on('message', msg => {
     //Leuke grapjes
 
     if (msg.content.search(/\bwat\b/gi) > -1) {
-        msg.reply('patat🍟');
+        msg.reply('Patat🍟');
         return;
     }
 
     if (msg.content.search(/\bhoezo\b/gi) > -1) {
-        msg.reply('ouzo!🍾');
+        msg.reply('Ouzo!🍾');
         return;
     }
 
     if (msg.content.search(/\binvictus\b/gi) > -1) {
         msg.reply("'vo");
+        return;
+    }
+
+    if (msg.content.search(/\bja ?ja\b/gi) > -1) {
+        msg.reply("Ding dong!⏰");
+        return;
+    }
+
+    if (msg.content.search(/\bik stel voor\b/gi) > -1) {
+        msg.reply("Je stelt helemaal niks voor.");
+        return;
+    }
+
+    if (msg.content.search(/\bbouwkavel/gi) > -1) {
+        msg.reply("Stroopwafel!🍾");
         return;
     }
 
