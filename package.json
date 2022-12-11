@@ -1,6 +1,6 @@
 {
   "name": "invictus-bot",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "The best discord bot ever made in js",
   "main": "app.js",
   "scripts": {
