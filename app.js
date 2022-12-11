@@ -25,7 +25,7 @@ client.on('message', msg => {
     }
 
     if (msg.content.search(/\bja ?ja\b/gi) > -1) {
-        msg.reply("Ding dong!⏰");
+        msg.reply("Ding dong⏰");
         return;
     }
 
@@ -55,8 +55,8 @@ client.on('message', msg => {
     if (!msg.content.startsWith(settings.prefix)) return; // If not a command
 
     const args = msg.content.slice(settings.prefix.length).trim().split(/ +/);
-    const cmdName = args.shift().toLowerCase();
-
+    let cmdName = args.shift().toLowerCase();
+    cmdName = cmdName === 'sb' ? 'strafbakken' : cmdName;
     if (!client.commands.has(cmdName)) return; // Command does not exist
 
     const cmd = client.commands.get(cmdName) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(cmdName));
@@ -83,6 +83,15 @@ client.on('message', msg => {
     }
 });
 
+// Add role to new user
+client.on('guildMemberAdd', (member) => {
+    const role = member.guild.roles.cache.find(role => role.name === 'Nieuw');
+    if (!role) return;
+    member.roles.add(role);
+    const senateChannel = member.guild.channels.cache.find(channel => channel.name === 'senaat');
+    if (!senateChannel) return;
+    senateChannel.send('Er is een nieuwe sukkel de server binnengekomen, geef ff role <@&906550222480605194>');
+});
 
 // Login and initialize
 client.on('ready', () => {

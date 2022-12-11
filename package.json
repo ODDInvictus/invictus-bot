@@ -4,18 +4,19 @@
   "description": "The best discord bot ever made in js",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
+    "dev": "nodemon app.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/astronautilus14/invictus-bot.git"
+    "url": "git+https://github.com/oddinvictus/invictus-bot.git"
   },
   "author": "Astronautilus14",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/astronautilus14/invictus-botissues"
+    "url": "https://github.com/oddinvictus/invictus-botissues"
   },
-  "homepage": "https://github.com/astronautilus14/invictus-bot#readme",
+  "homepage": "https://github.com/oddinvictus/invictus-bot#readme",
   "dependencies": {
     "@discordjs/opus": "^0.8.0",
     "ascii-table": "^0.0.9",
@@ -24,5 +25,8 @@
     "ffmpeg-static": "^4.2.6",
     "simple-youtube-api": "^5.2.1",
     "ytdl-core-discord": "^1.2.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
   }
 }
