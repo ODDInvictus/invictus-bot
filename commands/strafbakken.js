@@ -123,7 +123,7 @@ module.exports = {
 						msg.channel.send(`Yes hoppa ${name} heeft een bak ${method === 'post' ? 'verdiend' : 'getrokken'}!`);
 					}
 				} else {
-					msg.channel.send('Strafbakken is weer stuk!');
+					throw new Error("Strafbakken is weer stuk");
 				}
 			})
 			.catch(err => {

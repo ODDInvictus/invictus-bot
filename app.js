@@ -108,40 +108,40 @@ client.on('ready', () => {
 
 client.login(settings.token);
 
-// // API
-// const express = require('express');
-// const cors = require('cors');
+// API
+const express = require('express');
+const cors = require('cors');
 
-// const app = express();
-// app.use(cors());
+const app = express();
+app.use(cors());
 
-// app.get('/quote', (req, res) => {
-//     console.log('Request on route /quote');
+let c = Infinity;
+let messages;
+app.get('/quote', async (req, res) => {
+    console.log('Request on route /quote');
+    if (c > 25) {
+        c = 0;
+        const channel = client.channels.cache.get(settings.channelID);
+        messages = await channel.messages.fetch({ limit: 100 })
+    } else {
+        c++;
+    }
 
-//     const channel = client.channels.cache.get(settings.channelID);
+    messages.forEach(message => {
+        if (Math.random() < 0.1) {
+            res.json({quote: message.content});
+            return
+        } 
+    });
+    
+    res.json({quote: "wie dit leest trekt bak -Das tijdens het maken van de bot (kans op dit bericht is 1 / 10^100)"});
+});
 
-//     channel.messages.fetch({ limit: 100 }).then(messages => {
-//         //Iterate through the messages here with the variable "messages".
-//         ihavesend = false;
-//         messages.forEach(message => {
-//             if (ihavesend) return;
+const run = async () => {
+    await client.login(settings.token);
+    const port = process.env.PORT || settings.PORT;
+    app.listen(port);
+    console.log('Listening on port ' + port);
+}
 
-//             if (Math.random() < 0.1) {
-//                 res.json({quote: message.content});
-//                 ihavesend = true;
-//             } 
-//         });
-//         if (!ihavesend) {
-//             res.json({quote: "wie dit leest trekt bak -Das tijdens het maken van de bot (kans op dit bericht is 1 / 10^100)"});
-//         }
-//       });
-// });
-
-// const run = async () => {
-//     await client.login(settings.token);
-//     const port = process.env.PORT || settings.PORT;
-//     app.listen(port);
-//     console.log('Listening on port ' + port);
-// }
-
-// run();
+run();
