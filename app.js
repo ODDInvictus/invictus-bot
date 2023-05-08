@@ -131,14 +131,13 @@ app.get('/quote', tokenCheck, async (req, res) => {
     console.log('Request on route /quote');
     if (c > 25) {
         c = 0;
-        const channel = client.channels.cache.get(settings.quoteChannelID);
+        const channel = await client.channels.fetch(settings.quoteChannelID);
         messages = await channel.messages.fetch({ limit: 50 })
     } else {
         c++;
     }   
 
     for (let [id, message] of messages.entries()) {
-        console.log(id)
         if (last5.includes(id)) continue;
         if (Math.random() < 0.05) {
             res.json({quote: message.content});
@@ -162,7 +161,7 @@ function shuffleArray(array) {
 
 // Get 15 random photos
 app.get("/photo", tokenCheck, async (req, res) => {
-    const channel = client.channels.cache.get(settings.photoChannelID);
+    const channel = await client.channels.fetch(settings.photoChannelID);
     const messages = await channel.messages.fetch();
 
     let attachments = []
