@@ -111,31 +111,73 @@ client.login(settings.token);
 // API
 const express = require('express');
 const cors = require('cors');
+const { channel } = require('diagnostics_channel');
 
 const app = express();
 app.use(cors());
 
+// Check token
+function tokenCheck(req, res, next) {
+    if (req.headers.authorization == settings.secretKey) return next();
+    
+    return res.status(401).json({message: "Authorization key invalid"});
+}
+
+// Get a random quote
 let c = Infinity;
 let messages;
-app.get('/quote', async (req, res) => {
+let last5 = new Array(5).fill("");
+app.get('/quote', tokenCheck, async (req, res) => {
     console.log('Request on route /quote');
     if (c > 25) {
         c = 0;
-        const channel = client.channels.cache.get(settings.channelID);
-        messages = await channel.messages.fetch({ limit: 100 })
+        const channel = client.channels.cache.get(settings.quoteChannelID);
+        messages = await channel.messages.fetch({ limit: 50 })
     } else {
         c++;
+    }   
+
+    for (let [id, message] of messages.entries()) {
+        console.log(id)
+        if (last5.includes(id)) continue;
+        if (Math.random() < 0.05) {
+            res.json({quote: message.content});
+            last5.shift();
+            last5.push(id);
+            return;
+        }
+    }
+    
+    res.json({quote: "wie dit leest trekt bak -Das tijdens het maken van de bot (kans op dit bericht is 1 / 20^50)"});
+});
+
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
     }
 
-    messages.forEach(message => {
-        if (Math.random() < 0.1) {
-            res.json({quote: message.content});
-            return
-        } 
-    });
-    
-    res.json({quote: "wie dit leest trekt bak -Das tijdens het maken van de bot (kans op dit bericht is 1 / 10^100)"});
-});
+    return array;
+}
+
+// Get 15 random photos
+app.get("/photo", tokenCheck, async (req, res) => {
+    const channel = client.channels.cache.get(settings.photoChannelID);
+    const messages = await channel.messages.fetch();
+
+    let attachments = []
+
+    for (let [_, message] of messages.entries()) {
+        for (let [_, attachment] of message.attachments.entries()) {
+            if (/.*.(png|jpg|jpeg|gif|webp|avif|apng|bmp)$/i.test(attachment.url))
+                attachments.push(attachment.url);
+        }
+    }
+
+    if (attachments.length <= 15) return res.json({photos: attachments});
+
+    return res.json({photos: shuffleArray(attachments).slice(0,15)});
+})
 
 const run = async () => {
     await client.login(settings.token);
