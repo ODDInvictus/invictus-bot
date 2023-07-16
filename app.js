@@ -6,7 +6,7 @@ const client = new Discord.Client();
 
 client.on('message', msg => {
     if (msg.author.bot) return; // Sender is the bot
-    if (msg.channel.id == settings.channelID) return; // Quote chnnel
+    if (msg.channel.id == settings.quoteChannelID) return; // Quote chnnel
 
     //Leuke grapjes
     if (msg.content.search(/\bwat\b/gi) > -1) {
@@ -86,8 +86,8 @@ client.on('message', msg => {
 // Add role to new user
 client.on('guildMemberAdd', (member) => {
     const role = member.guild.roles.cache.find(role => role.name === 'Nieuw');
-    if (!role) return;
-    member.roles.add(role);
+    if (role) member.roles.add(role);
+
     const senateChannel = member.guild.channels.cache.find(channel => channel.name === 'senaat');
     if (!senateChannel) return;
     senateChannel.send('Er is een nieuwe sukkel de server binnengekomen, geef ff role <@&906550222480605194>');
@@ -111,7 +111,6 @@ client.login(settings.token);
 // API
 const express = require('express');
 const cors = require('cors');
-const { channel } = require('diagnostics_channel');
 
 const app = express();
 app.use(cors());
@@ -126,28 +125,29 @@ function tokenCheck(req, res, next) {
 // Get a random quote
 let c = Infinity;
 let messages;
-let last5 = new Array(5).fill("");
+let recentQuotes = new Array(10).fill("");
 app.get('/quote', tokenCheck, async (req, res) => {
     console.log('Request on route /quote');
     if (c > 25) {
         c = 0;
         const channel = await client.channels.fetch(settings.quoteChannelID);
-        messages = await channel.messages.fetch({ limit: 50 })
+        messages = await channel.messages.fetch()
     } else {
         c++;
     }   
 
     for (let [id, message] of messages.entries()) {
-        if (last5.includes(id)) continue;
+        if (message.type !== "DEFAULT") continue;
+        if (recentQuotes.includes(id)) continue;
         if (Math.random() < 0.05) {
             res.json({quote: message.content});
-            last5.shift();
-            last5.push(id);
+            recentQuotes.shift();
+            recentQuotes.push(id);
             return;
         }
     }
     
-    res.json({quote: "wie dit leest trekt bak -Das tijdens het maken van de bot (kans op dit bericht is 1 / 20^50)"});
+    res.json({quote: "Wie dit leest trekt bak"});
 });
 
 function shuffleArray(array) {
@@ -159,10 +159,11 @@ function shuffleArray(array) {
     return array;
 }
 
-// Get 15 random photos
+// Get random photos
 app.get("/photo", tokenCheck, async (req, res) => {
     const channel = await client.channels.fetch(settings.photoChannelID);
     const messages = await channel.messages.fetch();
+    const size = 25;
 
     let attachments = []
 
@@ -173,9 +174,9 @@ app.get("/photo", tokenCheck, async (req, res) => {
         }
     }
 
-    if (attachments.length <= 15) return res.json({photos: attachments});
+    if (attachments.length <= size) return res.json({photos: attachments});
 
-    return res.json({photos: shuffleArray(attachments).slice(0,15)});
+    return res.json({photos: shuffleArray(attachments).slice(0,size)});
 })
 
 const run = async () => {
