@@ -1,5 +1,6 @@
 const fs = require('fs');
 const settings = require('./settings.json');
+const fetchAll = require('discord-fetch-all')
 
 const Discord = require('discord.js');
 const client = new Discord.Client();
@@ -122,33 +123,64 @@ function tokenCheck(req, res, next) {
     return res.status(401).json({message: "Authorization key invalid"});
 }
 
-// Get a random quote
+// Quotes
 let c = Infinity;
 let messages;
-let recentQuotes = new Array(10).fill("");
+let recentQuotes = new Array(40).fill("");
+
 app.get('/quote', tokenCheck, async (req, res) => {
-    console.log('Request on route /quote');
-    if (c > 25) {
+    if(await fetchQuotes(res)) return;
+    sendQuote(res);   
+});
+
+async function fetchQuotes(res) {
+    // Every 50 request fetch the quotes again from discord
+    if (c > 50) {
+        let responded = false;
+        if (messages) {
+            sendQuote(res);
+            responded = true;
+        }
+
         c = 0;
         const channel = await client.channels.fetch(settings.quoteChannelID);
-        messages = await channel.messages.fetch()
+        // Dit is mokertje traag
+        messages = (await fetchAll.messages(channel, {
+            reverseArray: false, // Reverse the returned array
+            userOnly: true, // Only return messages by users
+            botOnly: false, // Only return messages by bots
+            pinnedOnly: false, // Only returned pinned messages
+        }));
+        return responded;
     } else {
         c++;
-    }   
+        return false;
+    }
+}
 
+function sendQuote(res) {
+    if (c==0) return res.json({
+        quote: messages[Math.floor(Math.random() * (messages.length-300)) + 300].content
+    });
+    // Respond with a random quote
     for (let [id, message] of messages.entries()) {
+        // Filter on only default messages (so no treads)
         if (message.type !== "DEFAULT") continue;
+        // Filter if the quote has recently been send
         if (recentQuotes.includes(id)) continue;
-        if (Math.random() < 0.05) {
+        // Change of 2% to send the quote
+        if (Math.random() < 0.02) {
+            // Send the quote
             res.json({quote: message.content});
+            // Update the recent quotes
             recentQuotes.shift();
             recentQuotes.push(id);
             return;
         }
     }
-    
-    res.json({quote: "Wie dit leest trekt bak"});
-});
+    // Default if no quote is chosen
+    return res.json({quote: "Wie dit leest trekt bak, de kans op dit bericht is ongeveer 0%"}); 
+}
 
 function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
