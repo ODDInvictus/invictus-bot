@@ -11,25 +11,22 @@ npm install
   ```sh
   echo  "{
    \"token\": \"FILL_IN\",
-   \"youtubeApiToken\": \"FILL_IN\",
-   \"link\": \"FILL_IIN\",
    \"prefix\": \"-\",
-   \"channelID\": \"FILL_IN\",
+   \"quoteChannelID\": \"FILL_IN\",
    \"dasmooiID\": \"FILL_IN\",
    \"polloID\": \"FILL_IN\",
    \"PORT\": 4200,
-   \"strafbakken\": \"https://strafbakken.nautdevroome.nl/bakken\",
-   \"strafbakkenPass\": \"FILL_IN\"
+   \"secretKey\": \"secret\"
 }" > settings.json
   ```
   Invullen:
-   - Token: Discord api token
-   - youtubeApiToken: YouTube api token
-   - link: Discord link
-   - channelID: Quote channel ID
+   - token: Discord api token
+   - prefix: Prefix van een command
+   - quoteChannelID: Quote channel ID
    - dasmooiID: Das Mooi! emote ID
    - polloID: Pollo👍 emote ID
-   - strafbakkenPass: Hash van het strafbakken wachtwoord
+   - PORT: port voor de api
+   - secretKey: Authorization header die nodig is om de api te gebruiken
 3. Start
   ```sh
   node app.js
